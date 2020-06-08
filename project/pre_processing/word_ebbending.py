@@ -28,10 +28,13 @@ def clean_to_vectors(doc):
 def comment_to_vector(doc):
     return doc.vector
 
+def comment_to_vector_norm(doc):
+    return doc.vector_norm
+
 def send_dados_to_picle(dados):
     dados.to_pickle('dados.pkl')
 
-def get_word_veector (dados):
+def get_word_vector (dados):
     # uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x)) # comentarios tokenizados pelo spacy
     dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x)) # cada linha sao palavras lematizadas, sem pontuacao e stopwords
@@ -47,7 +50,7 @@ def get_word_veector (dados):
     return t2
 
 
-def get_comment_veector (dados):
+def get_comment_vector (dados):
 # uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
     dados['Docs_clean'] = dados['Docs'].apply(
@@ -58,10 +61,26 @@ def get_comment_veector (dados):
     to_cluster_vector = []
     # soma todos os vetores palavras do commentario
     for comment in dados['Comment_vector']:
-        print(comment)
         to_cluster_vector.append(comment)
 
 
-    print(t2)
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
+
+def get_comment_vector_norm (dados):
+# uso de spacy
+    dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
+    dados['Docs_clean'] = dados['Docs'].apply(
+        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+    dados['Comment_vector_norm'] = dados['Docs'].apply(lambda x: comment_to_vector_norm(
+        x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
+    # send_dados_to_picle(dados)
+    to_cluster_vector = []
+    # soma todos os vetores palavras do commentario
+    for comment in dados['Comment_vector_norm']:
+        to_cluster_vector.append(comment)
+
+
+    t2 = np.stack(to_cluster_vector, axis=0)
+    return t2
+
