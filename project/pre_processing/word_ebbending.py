@@ -1,16 +1,16 @@
 # import import_data as data
-# import clusterize
+import os
 import pandas as pd
 # import gensim
 import numpy as np
 import spacy
+import clusterize
 
 nlp = spacy.load('pt_core_news_sm')
 # python -m spacy download pt_core_news_sm
 
 reviews = pd.read_excel('data1.xlsm',sheet_name='Result', index_col=0)
 # columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
-
 dados = reviews.dropna()
 
 
@@ -18,7 +18,6 @@ def clean_doc(doc):
     text = [token.lemma_ for token in doc if
             token.text != "" and token.text != " " and token.is_punct == False and token.is_stop == False]
     return text
-
 
 def clean_to_vectors(doc):
     text = [token.vector for token in doc if
@@ -49,7 +48,6 @@ def get_word_vector (dados):
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
 
-
 def get_comment_vector (dados):
 # uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
@@ -62,8 +60,6 @@ def get_comment_vector (dados):
     # soma todos os vetores palavras do commentario
     for comment in dados['Comment_vector']:
         to_cluster_vector.append(comment)
-
-
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
 
@@ -83,4 +79,8 @@ def get_comment_vector_norm (dados):
 
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
+
+clusterize.clusterize_share(get_comment_vector(dados))
+clusterize.clusterize_structure(get_comment_vector(dados))
+
 
