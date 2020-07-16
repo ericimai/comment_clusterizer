@@ -1,18 +1,14 @@
-# import import_data as data
-import os
+
+# Project library
+
+# External library
 import pandas as pd
 # import gensim
 import numpy as np
 import spacy
-import clusterize
 
 nlp = spacy.load('pt_core_news_sm')
 # python -m spacy download pt_core_news_sm
-
-reviews = pd.read_excel('data1.xlsm',sheet_name='Result', index_col=0)
-# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
-dados = reviews.dropna()
-
 
 def clean_doc(doc):
     text = [token.lemma_ for token in doc if
@@ -34,7 +30,7 @@ def send_dados_to_picle(dados):
     dados.to_pickle('dados.pkl')
 
 def get_word_vector (dados):
-    # uso de spacy
+# uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x)) # comentarios tokenizados pelo spacy
     dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x)) # cada linha sao palavras lematizadas, sem pontuacao e stopwords
     dados['Docs_vector'] = dados['Docs'].apply(lambda x: clean_to_vectors(x)) # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
@@ -79,9 +75,5 @@ def get_comment_vector_norm (dados):
 
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
-
-
-#clusterize.clusterize_share(get_comment_vector(dados))
-#clusterize.clusterize_structure(get_comment_vector(dados))
 
 

@@ -1,5 +1,6 @@
 # Project library
-#import word_ebbending
+import word_ebbending
+import import_data
 
 # External library
 from sklearn.cluster import KMeans
@@ -8,7 +9,6 @@ import matplotlib.pyplot as plt
 from yellowbrick.cluster import KElbowVisualizer
 import pandas as pd
 import numpy as np
-import word_ebbending
 
 # Elbow method:
 def elbow_method(X):
@@ -73,5 +73,4 @@ def clusterize_share(X):
 
 	return(kmeans.predict(X))
 
-#print(word_ebbending)
-#clusterize_share(word_ebbending.get_comment_vector(dados))
+clusterize_share(word_ebbending.get_comment_vector(import_data.import_data()))
