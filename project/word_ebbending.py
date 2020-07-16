@@ -80,7 +80,8 @@ def get_comment_vector_norm (dados):
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
 
-clusterize.clusterize_share(get_comment_vector(dados))
-clusterize.clusterize_structure(get_comment_vector(dados))
+
+#clusterize.clusterize_share(get_comment_vector(dados))
+#clusterize.clusterize_structure(get_comment_vector(dados))
 
 

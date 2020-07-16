@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 from yellowbrick.cluster import KElbowVisualizer
 import pandas as pd
 import numpy as np
+import word_ebbending
 
 # Elbow method:
 def elbow_method(X):
 	model = KMeans()
 	visualizer = KElbowVisualizer(model,k = (2,12))
 	visualizer.fit(X)
-	plt.close()
 	return visualizer.elbow_value_
 
 def clusterize_structure(X):
@@ -73,3 +73,5 @@ def clusterize_share(X):
 
 	return(kmeans.predict(X))
 
+#print(word_ebbending)
+#clusterize_share(word_ebbending.get_comment_vector(dados))
