@@ -1,5 +1,6 @@
 
 # Project library
+import import_data
 
 # External library
 import pandas as pd
@@ -46,24 +47,24 @@ def get_word_vector (dados):
 
 def get_comment_vector (dados):
 # uso de spacy
-    dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
-    dados['Docs_clean'] = dados['Docs'].apply(
-        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
-    dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(
+	dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
+	dados['Docs_clean'] = dados['Docs'].apply(
+    lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+	dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(
         x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
     # send_dados_to_picle(dados)
-    to_cluster_vector = []
+	to_cluster_vector = []
     # soma todos os vetores palavras do commentario
-    for comment in dados['Comment_vector']:
-        to_cluster_vector.append(comment)
-    t2 = np.stack(to_cluster_vector, axis=0)
-    return t2
+	for comment in dados['Comment_vector']:
+		to_cluster_vector.append(comment)
+	t2 = np.stack(to_cluster_vector, axis=0)
+	return t2
 
 def get_comment_vector_norm (dados):
 # uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
     dados['Docs_clean'] = dados['Docs'].apply(
-        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords	
     dados['Comment_vector_norm'] = dados['Docs'].apply(lambda x: comment_to_vector_norm(
         x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
     # send_dados_to_picle(dados)
@@ -72,8 +73,7 @@ def get_comment_vector_norm (dados):
     for comment in dados['Comment_vector_norm']:
         to_cluster_vector.append(comment)
 
-
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
 
-
+#get_comment_vector(import_data.import_data())

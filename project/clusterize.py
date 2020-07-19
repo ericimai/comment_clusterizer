@@ -11,32 +11,32 @@ import pandas as pd
 import numpy as np
 
 # Elbow method:
-def elbow_method(X):
+def elbow_method(bag_of_words):
 	model = KMeans()
 	visualizer = KElbowVisualizer(model,k = (2,12))
-	visualizer.fit(X)
+	visualizer.fit(bag_of_words)
 	return visualizer.elbow_value_
 
-def clusterize(X):
-	df_x = pd.DataFrame(X)
-	optimal_k = elbow_method(X)
+def clusterize(bag_of_words):
+	optimal_k = elbow_method(bag_of_words)
 	kmeans = KMeans(n_clusters=optimal_k)
 	print('Parameters: \n')
 	return kmeans, optimal_k
 
-def clusterize_structure(X):
-	df_x = pd.DataFrame(X)
-	kmeans, optimal = clusterize(X)
-	df_x["clusters"] = kmeans.fit_predict(df_x.values)
-	df_x.groupby("clusters").aggregate("mean").plot.bar()
+def clusterize_structure(bag_of_words):
+	df_bw = pd.DataFrame(bag_of_words)
+	kmeans, optimal_k = clusterize(bag_of_words)
+	predict = kmeans.fit_predict(df_bw.values)
+	df_bw["clusters"] = kmeans.fit_predict(df_bw.values)
+	df_bw.groupby("clusters").aggregate("mean").plot.bar()
 	plt.show()
 
-def clusterize_share(X):
+def clusterize_share(bag_of_words):
 	cluster_pool = []
-	df_x = pd.DataFrame(X)
-	kmeans, optimal_k = clusterize(X)
-	predict = kmeans.fit_predict(df_x.values)
-	df_x["clusters"] = predict
+	df_bw = pd.DataFrame(bag_of_words)
+	kmeans, optimal_k = clusterize(bag_of_words)
+	predict = kmeans.fit_predict(df_bw.values)
+	df_bw["clusters"] = predict
 	for cluster_sample in range(optimal_k):
 		cluster_pool.append(0)
 	for cluster in range(len(cluster_pool)):
@@ -49,6 +49,7 @@ def clusterize_share(X):
 	for id in range(len(cluster_pool)):
 		cluster_pool[id] = cluster_pool[id]/len(predict)
 		print('Cluster',id,':', '%.2f' % cluster_pool[id], '%')
+		
 	# share = [c0_porc,c1_porc,c2_porc,c3_porc,c4_porc]
 	# x = np.arange(optimal_k)
 	# width = 0.35
@@ -62,6 +63,6 @@ def clusterize_share(X):
 
 	return(kmeans.predict(X))
 
-# clusterize(word_ebbending.get_comment_vector(import_data.import_data()))
+clusterize(word_ebbending.get_comment_vector(import_data.import_data()))
 # clusterize_structure(word_ebbending.get_comment_vector(import_data.import_data()))
-clusterize_share(word_ebbending.get_comment_vector(import_data.import_data()))
+# clusterize_share(word_ebbending.get_comment_vector(import_data.import_data()))
