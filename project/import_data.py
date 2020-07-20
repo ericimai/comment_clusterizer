@@ -8,3 +8,4 @@ def import_data():
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
 	dados = reviews.dropna()
 	return dados
+	

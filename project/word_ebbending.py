@@ -46,6 +46,7 @@ def get_word_vector (dados):
     return t2
 
 def get_comment_vector (dados):
+	# print(dados['Location Name'])
 # uso de spacy
 	dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
 	dados['Docs_clean'] = dados['Docs'].apply(
@@ -58,7 +59,8 @@ def get_comment_vector (dados):
 	for comment in dados['Comment_vector']:
 		to_cluster_vector.append(comment)
 	t2 = np.stack(to_cluster_vector, axis=0)
-	return t2
+	
+	return t2, dados.index.values
 
 def get_comment_vector_norm (dados):
 # uso de spacy
@@ -76,4 +78,4 @@ def get_comment_vector_norm (dados):
     t2 = np.stack(to_cluster_vector, axis=0)
     return t2
 
-#get_comment_vector(import_data.import_data())
+# get_comment_vector(import_data.import_data())

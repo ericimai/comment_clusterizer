@@ -31,8 +31,10 @@ def clusterize_structure(bag_of_words):
 	df_bw.groupby("clusters").aggregate("mean").plot.bar()
 	plt.show()
 
-def clusterize_share(bag_of_words):
+def clusterize_share(bag_of_words, index):
 	cluster_pool = []
+	cluster_index = [] 
+	count_index = 0
 	df_bw = pd.DataFrame(bag_of_words)
 	kmeans, optimal_k = clusterize(bag_of_words)
 	predict = kmeans.fit_predict(df_bw.values)
@@ -40,9 +42,13 @@ def clusterize_share(bag_of_words):
 	for cluster_sample in range(optimal_k):
 		cluster_pool.append(0)
 	for cluster in range(len(cluster_pool)):
+		cluster_index.append(list())
 		for sample in predict:
 			if sample == cluster:
 				cluster_pool[cluster] = cluster_pool[cluster] + 1
+				cluster_index[cluster].append(index[count_index])
+			count_index = count_index + 1
+		count_index = 0
 	print('\nTotal Sample: ', len(predict))
 	print('Cluster_pool',cluster_pool)
 	
@@ -61,8 +67,20 @@ def clusterize_share(bag_of_words):
 	# ax.legend()
 	# plt.show()
 
-	return(kmeans.predict(X))
+	return(cluster_pool, cluster_index)
 
-clusterize(word_ebbending.get_comment_vector(import_data.import_data()))
-# clusterize_structure(word_ebbending.get_comment_vector(import_data.import_data()))
-# clusterize_share(word_ebbending.get_comment_vector(import_data.import_data()))
+# Main()
+t2, index = word_ebbending.get_comment_vector(import_data.import_data())
+cluster_pool, cluster_index = clusterize_share(t2, index)
+print(len(cluster_index[1]))
+print(cluster_index[1])
+
+print(len(cluster_index[0]))
+print(cluster_index[0])
+
+print(len(cluster_index[2]))
+print(cluster_index[2])
+
+print(len(cluster_index[3]))
+print(cluster_index[3])
+
