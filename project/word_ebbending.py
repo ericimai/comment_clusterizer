@@ -1,6 +1,6 @@
 
 # Project library
-import import_data
+import project.import_data as import_data
 
 # External library
 import pandas as pd
@@ -11,9 +11,12 @@ import spacy
 nlp = spacy.load('pt_core_news_sm')
 # python -m spacy download pt_core_news_sm
 
+# nlp.Defaults.stop_words |=
+
 def clean_doc(doc):
     text = [token.lemma_ for token in doc if
             token.text != "" and token.text != " " and token.is_punct == False and token.is_stop == False]
+    print(text)
     return text
 
 def clean_to_vectors(doc):
@@ -47,7 +50,7 @@ def get_word_vector (dados):
 
 def get_comment_vector (dados):
 	# print(dados['Location Name'])
-# uso de spacy
+    # uso de spacy
 	dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
 	dados['Docs_clean'] = dados['Docs'].apply(
     lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
@@ -59,14 +62,14 @@ def get_comment_vector (dados):
 	for comment in dados['Comment_vector']:
 		to_cluster_vector.append(comment)
 	t2 = np.stack(to_cluster_vector, axis=0)
-	
-	return t2, dados.index.values
+
+	return t2,dados
 
 def get_comment_vector_norm (dados):
-# uso de spacy
+    # uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
     dados['Docs_clean'] = dados['Docs'].apply(
-        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords	
+        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
     dados['Comment_vector_norm'] = dados['Docs'].apply(lambda x: comment_to_vector_norm(
         x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
     # send_dados_to_picle(dados)

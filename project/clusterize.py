@@ -1,6 +1,6 @@
 # Project library
-import word_ebbending
-import import_data
+import project.word_ebbending as word_ebbending
+import project.import_data as import_data
 
 # External library
 from sklearn.cluster import KMeans
