@@ -8,7 +8,7 @@ import re
 import string
 
 reviews = pd.read_excel('data1.xlsm',sheet_name='Result',index_col=0)
-dados = reviews.dropna().reset_index()
+dados = reviews[reviews['Content'].notna()]
 print(dados)
 
 stopwords = nltk.corpus.stopwords.words('portuguese')
