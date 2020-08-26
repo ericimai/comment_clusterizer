@@ -1,6 +1,7 @@
 
 # Project library
-import project.import_data as import_data
+# import project.import_data as import_data
+import import_data
 
 # External library
 import pandas as pd
@@ -16,7 +17,7 @@ nlp = spacy.load('pt_core_news_sm')
 def clean_doc(doc):
     text = [token.lemma_ for token in doc if
             token.text != "" and token.text != " " and token.is_punct == False and token.is_stop == False]
-    print(text)
+    # print(text)
     return text
 
 def clean_to_vectors(doc):
@@ -45,8 +46,8 @@ def get_word_vector (dados):
         for word_vector in comment:
             to_cluster_vector.append(word_vector)
 
-    t2 = np.stack(to_cluster_vector, axis=0)
-    return t2
+    word_matrix = np.stack(to_cluster_vector, axis=0)
+    return word_matrix
 
 def get_comment_vector (dados):
 	# print(dados['Location Name'])
@@ -60,10 +61,10 @@ def get_comment_vector (dados):
 	to_cluster_vector = []
     # soma todos os vetores palavras do commentario
 	for comment in dados['Comment_vector']:
-		to_cluster_vector.append(comment)
-	t2 = np.stack(to_cluster_vector, axis=0)
+		to_cluster_vector.append(comment/np.linalg.norm(comment))
+	comment_matrix = np.stack(to_cluster_vector, axis=0)
 
-	return t2,dados
+	return comment_matrix,dados
 
 def get_comment_vector_norm (dados):
     # uso de spacy
@@ -78,7 +79,52 @@ def get_comment_vector_norm (dados):
     for comment in dados['Comment_vector_norm']:
         to_cluster_vector.append(comment)
 
-    t2 = np.stack(to_cluster_vector, axis=0)
-    return t2
+    comment_matrix = np.stack(to_cluster_vector, axis=0)
+    return comment_matrix
 
-# get_comment_vector(import_data.import_data())
+# def get_comment_vector_angle_v2(dados):
+#     comment_matrix_angle = []
+#     comment_matrix, base = get_comment_vector(dados)
+#     for i_comment_matrix in range(len(comment_matrix)):
+#         comment_matrix_angle.append(list())
+#         # -1: last dimension
+#         # print('comment: ', i_comment_matrix, '\n')
+#         # for i_dimension in range(len(comment_matrix[i_comment_matrix])-1):
+#         for i_dimension in range(len(comment_matrix[i_comment_matrix])-1):
+#             # print('dimension: ', i_dimension, '\n')
+#             # +1: i_next_dimension inicialize in zero
+#             for i_next_dimension in range(len(comment_matrix[i_comment_matrix]) - (i_dimension +1)):
+#             # for i_next_dimension in range(len(comment_matrix[i_comment_matrix])):    
+#                 unit_op_cat = comment_matrix[i_comment_matrix][i_dimension]/np.linalg.norm(comment_matrix[i_comment_matrix][i_dimension])
+#                 unit_adj_cat = comment_matrix[i_comment_matrix][i_dimension + (i_next_dimension+1)]/np.linalg.norm(comment_matrix[i_comment_matrix][i_dimension + (i_next_dimension + 1)])
+#                 print(unit_op_cat)
+#                 print(unit_op_cat)
+#                 dot_product = np.dot(unit_op_cat,unit_adj_cat)
+#                 # angle = np.arccos(dot_product)
+#                 comment_matrix_angle[i_comment_matrix].append(dot_product)
+#                 # tangent = comment_matrix[i_comment_matrix][i_dimension]/comment_matrix[i_comment_matrix][i_dimension - (i_next_dimension + 1)]
+#                 # comment_matrix_angle[i_comment_matrix].append(tangent)
+    
+#     return comment_matrix_angle, base
+
+# def get_comment_vector_angle(dados):
+#     comment_matrix_angle = []
+#     ref = []
+#     comment_matrix, base = get_comment_vector(dados)
+#     for i in range(96):
+#         ref.append(1)
+#     for i_comment_matrix in range(len(comment_matrix)):
+#         # comment_matrix_angle.append(list())
+#         # -1: last dimension
+#         # print('comment: ', i_comment_matrix, '\n')
+#         # for i_dimension in range(len(comment_matrix[i_comment_matrix])-1):
+#         # for i_dimension in range(len(comment_matrix[i_comment_matrix])):  
+#         norm = comment_matrix[i_comment_matrix]/np.linalg.norm(comment_matrix[i_comment_matrix])
+#         print(norm)
+#         dot_product = np.dot(norm,ref)
+#                 # angle = np.arccos(dot_product)
+#         comment_matrix_angle.append(dot_product)
+#                 # tangent = comment_matrix[i_comment_matrix][i_dimension]/comment_matrix[i_comment_matrix][i_dimension - (i_next_dimension + 1)]
+#                 # comment_matrix_angle[i_comment_matrix].append(tangent)
+    
+#     return comment_matrix_angle, base
