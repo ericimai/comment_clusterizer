@@ -1,8 +1,8 @@
 # Project library
-# import project.word_ebbending as word_ebbending
-# import project.import_data as import_data
-import word_ebbending
-import import_data
+import project.word_ebbending as word_ebbending
+import project.import_data as import_data
+# import word_ebbending
+# import import_data
 
 # External library
 from sklearn.cluster import KMeans
@@ -71,38 +71,55 @@ def clusterize_share(bag_of_words, index):
 
 	return(cluster_pool, cluster_index)
 
-# Main()
+# Main()==========================================================================================
+
 # comment_matrix_angle, base = word_ebbending.get_comment_vector_angle(import_data.import_data())
 # clusterize(comment_matrix_angle)
+# print('Parameters: \n')
+# t2, base = word_ebbending.get_comment_vector(import_data.import_data())
+# print(t2)
+# # clusterize_structure(t2)
+# cluster_pool, cluster_index = clusterize_share(t2, base.index.values)
+# # print(cluster_index)
+#
+# print(len(cluster_index[0]))
+# # print(cluster_index[0])
+# # print(cluster_index[0])
+#
+#
+# print(len(cluster_index[1]))
+# # print(cluster_index[1])
+#
+#
+# print(len(cluster_index[2]))
+# # print(cluster_index[2])
+#
+#
+# print(len(cluster_index[3]))
+# # print(cluster_index[3])
+#
+#
+# print(len(cluster_index[4]))
+# # print(cluster_index[4])
+# dados = import_data.import_data()
+# writer =pd.ExcelWriter('Clusters.xlsx', engine = 'xlsxwriter')
+# dados.loc[cluster_index[0],'Content'].to_excel(writer,sheet_name='Cluster_0')
+# dados.loc[cluster_index[1],'Content'].to_excel(writer,sheet_name='Cluster_1')
+# dados.loc[cluster_index[2],'Content'].to_excel(writer,sheet_name='Cluster_2')
+# dados.loc[cluster_index[3],'Content'].to_excel(writer,sheet_name='Cluster_3')
+# dados.loc[cluster_index[4],'Content'].to_excel(writer,sheet_name='Cluster_4')
+# writer.save()
+
+# mains v2 ==========================================================================
 print('Parameters: \n')
-t2, base = word_ebbending.get_comment_vector(import_data.import_data())
+t2, base = word_ebbending.get_comment_vector(import_data.new_data())
 print(t2)
 # clusterize_structure(t2)
 cluster_pool, cluster_index = clusterize_share(t2, base.index.values)
-# print(cluster_index)
-
-print(len(cluster_index[0]))
-# print(cluster_index[0])
-# print(cluster_index[0])
-dados = import_data.import_data()
-dados.loc[cluster_index[0],'Content'].to_excel('Cluster 0.xlsx')
-
-print(len(cluster_index[1]))
-# print(cluster_index[1])
-dados = import_data.import_data()
-dados.loc[cluster_index[1],'Content'].to_excel('Cluster 1.xlsx')
-
-print(len(cluster_index[2]))
-# print(cluster_index[2])
-dados = import_data.import_data()
-dados.loc[cluster_index[2],'Content'].to_excel('Cluster 2.xlsx')
-
-print(len(cluster_index[3]))
-# print(cluster_index[3])
-dados = import_data.import_data()
-dados.loc[cluster_index[3],'Content'].to_excel('Cluster 3.xlsx')
-
-print(len(cluster_index[4]))
-# print(cluster_index[4])
-dados = import_data.import_data()
-dados.loc[cluster_index[4],'Content'].to_excel('Cluster 4.xlsx')
+dados = import_data.new_data()
+writer =pd.ExcelWriter('Clusters_v2.xlsx', engine = 'xlsxwriter')
+for i in range(len(cluster_index)):
+	print(len(cluster_index[i]))
+	print(cluster_index[i])
+	dados.loc[cluster_index[i], 'Content'].to_excel(writer, sheet_name='Cluster_'+str(i))
+writer.save()

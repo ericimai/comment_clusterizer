@@ -31,8 +31,8 @@ def clean_text(text):
 def get_matrix(docs,n=1,m=2):
     cv = CountVectorizer(docs, ngram_range=(n, m), preprocessor=clean_text)  # ,min_df=0.05)
     count_vector = cv.fit_transform(docs)
-    print(cv.vocabulary_)  # devolve a palavra e sua posicao
-    print(cv.get_feature_names())  # manda as palavras
+    # print(cv.vocabulary_)  # devolve a palavra e sua posicao
+    # print(cv.get_feature_names())  # manda as palavras
     count_vect_df = pd.DataFrame(count_vector.todense(), columns=cv.get_feature_names())
     # return cv.vocabulary_,cv.get_feature_names() # retorna as palavras e identificadas
     return count_vect_df
@@ -68,6 +68,8 @@ def get_tdif_score(docs,n=1,m=2):
     return aux
 #print the scores
 
-docs = dados['Content'].tolist()
-print(docs)
-print(get_tdif_score(docs))
+# docs = dados['Content'].tolist()
+# print(docs)
+# print(get_tdif_score(docs))
+#
+# get_tdif_score(docs).to_excel('tfidf_v1.xlsx')
