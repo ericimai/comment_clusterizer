@@ -5,10 +5,10 @@ import pandas as pd
 import re
 
 def import_data():
-	reviews = pd.read_excel('data1.xlsm',sheet_name='Result') #, index_col=0
+	reviews = pd.read_excel('data_EDC.xlsm',sheet_name='Result') #, index_col=0
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
 	dados = reviews[reviews['Content'].notna()]
-
+	# print(dados)
 
 	return dados
 
@@ -18,7 +18,7 @@ def new_data():
 
 	for index, row in dados.iterrows():
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
-		regex = r"(\.+ | e | ! |! |!+|\?+|, |,|  +)"
+		regex = r"(\.+ | e | mas | , | porém | porem 	)"
 		res = re.sub(regex, "<space>", row['Content'], 0, re.MULTILINE)
 		res1 = list(re.split("<space>| <space>|<space> ", res))
 		res1 = list(filter(None, res1))
