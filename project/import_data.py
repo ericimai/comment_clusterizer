@@ -18,7 +18,7 @@ def new_data():
 
 	for index, row in dados.iterrows():
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
-		regex = r"(\.+ | e | mas | , | porém | porem 	)"
+		regex = r"(\.+ | e | mas | porém | porem 	)"
 		res = re.sub(regex, "<space>", row['Content'], 0, re.MULTILINE)
 		res1 = list(re.split("<space>| <space>|<space> ", res))
 		res1 = list(filter(None, res1))

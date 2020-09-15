@@ -81,6 +81,7 @@ def get_comment_vector_norm (dados):
         to_cluster_vector.append(comment)
 
     comment_matrix = np.stack(to_cluster_vector, axis=0)
+    
     return comment_matrix
 
 def get_comment_vector_cos(dados):
@@ -94,7 +95,47 @@ def get_comment_vector_cos(dados):
         comment_matrix_cos.append(cos)
     return comment_matrix_cos, base
 
+def get_comment_vector_cos_v2(dados):
+    ref = [1,1]
+    # Inicialização da matrix de cossenos dos comentários
+    comment_matrix_cos = []
+    # Variávies de matrix de comentários já vetorizados (comment_matrizx) e data frame da base (base)   
+    comment_matrix, base = get_comment_vector(dados)
+    # Para cada comentário vetorizado faça:
+    for i_comment_matrix in range(len(comment_matrix)):
+        # Preenchimento de 1 vetor vazio por comentário
+        comment_matrix_cos.append(list())
+        # Para cada dimensão de comentário faça:
+        # -1: vetor começa em zero.
+        for i_dimension in range(len(comment_matrix[i_comment_matrix])-1):
+            pair_vector = [ comment_matrix[i_comment_matrix][i_dimension], comment_matrix[i_comment_matrix][i_dimension + 1]]
+            cos = np.vdot(pair_vector,ref)/((np.linalg.norm(pair_vector))*np.linalg.norm(ref))
+            comment_matrix_cos[i_comment_matrix].append(cos)
 
-# comment_matrix_cos, base = get_comment_vector_cos(import_data.import_data())
+    return comment_matrix, dados
+
+def get_comment_vector_cos_v3(dados):
+    ref = [1,1]
+    # Inicialização da matrix de cossenos dos comentários
+    comment_matrix_cos = []
+    # Variávies de matrix de comentários já vetorizados (comment_matrizx) e data frame da base (base)   
+    comment_matrix, base = get_comment_vector(dados)
+    # Para cada comentário vetorizado faça:
+    for i_comment_matrix in range(len(comment_matrix)):
+        # Preenchimento de 1 vetor vazio por comentário
+        comment_matrix_cos.append(list())
+        # Para cada dimensão de comentário faça:
+        # -1: vetor começa em zero + (-1) menos o último valor
+        for i_dimension in range(len(comment_matrix[i_comment_matrix])-2):
+            # Para cada dimensão de index maior que i_dimension é construído um vetor (valor1, valor2) 
+            second_dimension = i_dimension + 1
+            while(second_dimension <= len(comment_matrix[i_comment_matrix])-1):
+                pair_vector = [ comment_matrix[i_comment_matrix][i_dimension], comment_matrix[i_comment_matrix][second_dimension]]
+                cos = np.vdot(pair_vector,ref)/((np.linalg.norm(pair_vector))*np.linalg.norm(ref))
+                comment_matrix_cos[i_comment_matrix].append(cos)
+                second_dimension = second_dimension + 1
+    return comment_matrix, dados
+
+# comment_matrix_cos = get_comment_vector_cos_v3(import_data.import_data())
 # print(comment_matrix_cos,'\n')
 # print(len(comment_matrix_cos),'\n')
