@@ -1,7 +1,7 @@
 
 # Project library
-# import project.import_data as import_data
-import import_data
+import project.import_data as import_data
+# import import_data
 
 # External library
 import pandas as pd
@@ -50,6 +50,8 @@ def get_word_vector (dados):
     return word_matrix
 
 def get_comment_vector (dados):
+    # caso 1 - vetor 96
+
 	# print(dados['Location Name'])
     # uso de spacy
 	dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
@@ -66,6 +68,27 @@ def get_comment_vector (dados):
 	comment_matrix = np.stack(to_cluster_vector, axis=0)
 
 	return comment_matrix,dados
+
+
+def get_comment_vector_div_norm(dados):
+    # caso 2 - alteracao do dividido pela normal
+
+    # print(dados['Location Name'])
+    # uso de spacy
+    dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
+    dados['Docs_clean'] = dados['Docs'].apply(
+        lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+    dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(
+        x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
+    # send_dados_to_picle(dados)
+    to_cluster_vector = []
+    # soma todos os vetores palavras do commentario
+    for comment in dados['Comment_vector']:
+        to_cluster_vector.append(comment / np.linalg.norm(comment))
+    # to_cluster_vector.append(comment/np.linalg.norm(comment))
+    comment_matrix = np.stack(to_cluster_vector, axis=0)
+
+    return comment_matrix, dados
 
 def get_comment_vector_norm (dados):
     # uso de spacy
@@ -85,6 +108,7 @@ def get_comment_vector_norm (dados):
     return comment_matrix
 
 def get_comment_vector_cos(dados):
+    # nao vai usar
     comment_matrix_cos = []
     ref = []
     comment_matrix, base = get_comment_vector(dados)
@@ -96,6 +120,7 @@ def get_comment_vector_cos(dados):
     return comment_matrix_cos, base
 
 def get_comment_vector_cos_v2(dados):
+    # caso 3 par a par
     ref = [1,1]
     # Inicialização da matrix de cossenos dos comentários
     comment_matrix_cos = []
@@ -115,6 +140,7 @@ def get_comment_vector_cos_v2(dados):
     return comment_matrix, dados
 
 def get_comment_vector_cos_v3(dados):
+    # caso 4 comb de vetor
     ref = [1,1]
     # Inicialização da matrix de cossenos dos comentários
     comment_matrix_cos = []
