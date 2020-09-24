@@ -1,8 +1,8 @@
 # Project library
-import project.word_ebbending as word_ebbending
-import project.import_data as import_data
-# import import_data
-# import import_data
+# import project.word_ebbending as word_ebbending
+# import project.import_data as import_data
+import word_ebbending
+import import_data
 
 # External library
 from sklearn.cluster import KMeans
@@ -155,13 +155,15 @@ def clusterize_share(bag_of_words, index):
 # Main_V2()==========================================================================================
 
 print('Parameters: \n')
-t2, base = word_ebbending.get_comment_vector_cos_v3(import_data.import_data())
-# print(t2)
+t2, base = word_ebbending.similarity_matrix(import_data.new_data())
+# print(t2,'\n')
+# print(len(t2),'\n')
+# print(len(t2[0]),'\n')
 # clusterize_structure(t2)
 
 cluster_pool, cluster_index = clusterize_share(t2, base.index.values)
 dados = import_data.import_data()
-writer =pd.ExcelWriter('Clusters_COS_EDC_v2_1509.xlsx', engine = 'xlsxwriter')
+writer =pd.ExcelWriter('Clusters_Similarity_BAR.xlsx', engine = 'xlsxwriter')
 for i in range(len(cluster_index)):
 	print(len(cluster_index[i]))
 	print(cluster_index[i])

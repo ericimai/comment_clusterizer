@@ -1,6 +1,7 @@
-import project.import_data as import_data
-import project.clusterize as cluster
-# import import_data
+# import project.import_data as import_data
+# import project.clusterize as cluster
+import clusterize
+import import_data
 
 import re
 import numpy as np
@@ -152,7 +153,7 @@ def unigram_lda(n_topic,data):
 #     contents = pd.Series(texts)
 #     sent_topics_df = pd.concat([sent_topics_df, contents], axis=1)
 #     return (sent_topics_df)
-data = pd.read_excel('Clusters_COS_EDC_v2_1509.xlsx', sheet_name='Cluster_4')
+data = pd.read_excel('Clusters_Similarity_8000.xlsx', sheet_name='Cluster_4')
 
 n_topic = 1
 

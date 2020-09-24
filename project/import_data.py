@@ -5,7 +5,7 @@ import pandas as pd
 import re
 
 def import_data():
-	reviews = pd.read_excel('data_EDC.xlsm',sheet_name='Result') #, index_col=0
+	reviews = pd.read_excel('data1.xlsm',sheet_name='Result') #, index_col=0
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
 	dados = reviews[reviews['Content'].notna()]
 	# print(dados)

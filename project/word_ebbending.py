@@ -1,7 +1,7 @@
 
 # Project library
-import project.import_data as import_data
-# import import_data
+# import project.import_data as import_data
+import import_data
 
 # External library
 import pandas as pd
@@ -160,6 +160,19 @@ def get_comment_vector_cos_v3(dados):
                 cos = np.vdot(pair_vector,ref)/((np.linalg.norm(pair_vector))*np.linalg.norm(ref))
                 comment_matrix_cos[i_comment_matrix].append(cos)
                 second_dimension = second_dimension + 1
+    return comment_matrix, dados
+
+def similarity_matrix(dados):
+    similarity_matrix = []
+    comment_matrix, base = get_comment_vector(dados)
+    for i_comment_matrix in range(len(comment_matrix)):
+        similarity_matrix.append(list())
+        # Preenchimento de 1 vetor vazio por comentários
+        for i_comment_matrix_2 in range(len(comment_matrix)):
+            comment = []
+            cos = np.vdot(comment_matrix[i_comment_matrix], comment_matrix[i_comment_matrix_2])/((np.linalg.norm(comment_matrix[i_comment_matrix]))*np.linalg.norm(comment_matrix[i_comment_matrix_2]))
+            similarity_matrix[i_comment_matrix].append(cos)
+    comment_matrix = np.stack(similarity_matrix, axis=0)
     return comment_matrix, dados
 
 # comment_matrix_cos = get_comment_vector_cos_v3(import_data.import_data())
