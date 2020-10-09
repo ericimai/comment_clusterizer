@@ -16,13 +16,13 @@ nlp = spacy.load('pt_core_news_sm')
 
 def clean_doc(doc):
     text = [token.lemma_ for token in doc if
-            token.text != "" and token.text != " " and token.is_punct == False and token.is_stop == False]
-    # print(text)
+            token.text != "" and token.text != " " and token.text != "O" and token.text != "A" and token.text != "a" and token.text != "o" and token.is_punct == False and token.is_stop == False and token.is_bracket == False]
     return text
 
 def clean_to_vectors(doc):
     text = [token.vector for token in doc if
-            token.text != "" and token.text != " " and token.is_punct == False and token.is_stop == False]
+            token.text != "" and token.text != " " and token.text != "O" and token.text != "A" and token.text != "a" and token.text != "o" and token.is_punct == False and token.is_stop == False and token.is_bracket == False]
+    text['Content'].notna()
     return text
 
 def comment_to_vector(doc):
@@ -52,28 +52,22 @@ def get_word_vector (dados):
 def get_comment_vector (dados):
     # caso 1 - vetor 96
 
-	# print(dados['Location Name'])
     # uso de spacy
-	dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
-	dados['Docs_clean'] = dados['Docs'].apply(
-    lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
-	dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(
-        x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
-    # send_dados_to_picle(dados)
-	to_cluster_vector = []
+    dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
+    # dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+    dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
+    to_cluster_vector = []
     # soma todos os vetores palavras do commentario
-	for comment in dados['Comment_vector']:
-		to_cluster_vector.append(comment)
-        # to_cluster_vector.append(comment/np.linalg.norm(comment))
-	comment_matrix = np.stack(to_cluster_vector, axis=0)
+    for comment in dados['Comment_vector']:
+        to_cluster_vector.append(comment)
 
-	return comment_matrix,dados
+    comment_matrix = np.stack(to_cluster_vector, axis=0)
+    return comment_matrix,dados
 
 
 def get_comment_vector_div_norm(dados):
     # caso 2 - alteracao do dividido pela normal
 
-    # print(dados['Location Name'])
     # uso de spacy
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
     dados['Docs_clean'] = dados['Docs'].apply(
@@ -174,7 +168,3 @@ def similarity_matrix(dados):
             similarity_matrix[i_comment_matrix].append(cos)
     comment_matrix = np.stack(similarity_matrix, axis=0)
     return comment_matrix, dados
-
-# comment_matrix_cos = get_comment_vector_cos_v3(import_data.import_data())
-# print(comment_matrix_cos,'\n')
-# print(len(comment_matrix_cos),'\n')

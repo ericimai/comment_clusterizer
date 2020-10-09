@@ -1,6 +1,7 @@
-import project.import_data as import_data
-import project.clusterize as cluster
-# import import_data
+# import project.import_data as import_data
+# import project.clusterize as cluster
+import import_data
+import clusterize
 
 import re
 import numpy as np
@@ -123,7 +124,7 @@ lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                            per_word_topics=True)
 
 # Print the Keyword in the 10 topics
-pprint(lda_model.print_topics())
+print(lda_model.print_topics())
 doc_lda = lda_model[corpus]
 
 
