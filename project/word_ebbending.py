@@ -1,7 +1,7 @@
 
 # Project library
-# import project.import_data as import_data
-import import_data
+import project.import_data as import_data
+# import import_data
 
 # External library
 import pandas as pd

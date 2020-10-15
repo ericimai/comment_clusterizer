@@ -4,14 +4,20 @@
 import pandas as pd
 import re
 
-def import_data():
+def import_data_bar():
 	reviews = pd.read_excel('data1.xlsm',sheet_name='Result') #, index_col=0
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
 	dados = reviews[reviews['Content'].notna()]
 	return dados
 
-def new_data():
-	dados = import_data()
+def import_data_edc():
+	reviews = pd.read_excel('data_EDC_v2000.xlsm',sheet_name='Result') #, index_col=0
+	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
+	dados = reviews[reviews['Content'].notna()]
+	return dados
+
+def new_data(dados):
+	# dados = import_data()
 	new_dados= pd.DataFrame(columns=['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
 
 	for index, row in dados.iterrows():
