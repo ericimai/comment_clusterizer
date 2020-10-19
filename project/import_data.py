@@ -3,6 +3,8 @@
 # External library
 import pandas as pd
 import re
+from nltk.corpus import stopwords
+from string import punctuation
 
 def import_data_bar():
 	reviews = pd.read_excel('data1.xlsm',sheet_name='Result') #, index_col=0
@@ -22,7 +24,7 @@ def new_data(dados):
 
 	for index, row in dados.iterrows():
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
-		regex = r"(\.+ | e | mas | porém | porem 	)"
+		regex = r"(\.+ | e | mas | porém | porem | ! 	)"
 		res = re.sub(regex, "<space>", row['Content'], 0, re.MULTILINE)
 		res1 = list(re.split("<space>| <space>|<space> ", res))
 		res1 = list(filter(None, res1))
@@ -58,5 +60,11 @@ def new_data(dados):
 			new_dados = new_dados.append(insert_r,ignore_index=True)
 
 	new_dados.set_index('Review ID',inplace=True)
+	# Limpeza de dados após quebra:
+	stop_words = set(stopwords.words('portuguese') + list(punctuation))
+	for word in stop_words:
+		new_dados = new_dados[new_dados['Content'] != word]
+	new_dados = new_dados[new_dados['Content'].notna()]
+
 	new_dados.to_excel('new_dados.xlsx')
 	return new_dados

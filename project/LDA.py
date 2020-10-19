@@ -1,7 +1,7 @@
-import project.import_data as import_data
-import project.clusterize as cluster
-# import import_data
-# import clusterize
+# import project.import_data as import_data
+# import project.clusterize as cluster
+import import_data
+import clusterize
 
 import re
 import numpy as np
@@ -177,7 +177,7 @@ def lda_from_clusterized_excel(n_topic,excel_input, excel_output):
     n_sheets = len(aux_df.sheet_names)
 
     writer = pd.ExcelWriter(excel_output, engine='xlsxwriter')
-    for i in range(1, n_sheets):
+    for i in range(0, n_sheets):
         sheet_name_cluster = 'Cluster_' + str(i)
         data = pd.read_excel(excel_input, sheet_name=sheet_name_cluster, index_col=0)
         # preprocessed_data = lemmatization(data)

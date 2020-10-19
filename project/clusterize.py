@@ -18,7 +18,6 @@ def elbow_method(bag_of_words):
 	visualizer = KElbowVisualizer(model,k = (2,12))
 	visualizer.fit(bag_of_words)
 	plt.cla()
-	# plt.clf()
 	plt.close()
 	return visualizer.elbow_value_
 
@@ -36,30 +35,44 @@ def clusterize_structure(bag_of_words):
 	df_bw.groupby("clusters").aggregate("mean").plot.bar()
 	plt.show()
 
-def clusterize_share(bag_of_words, index):
-	cluster_pool = []
-	cluster_index = [] 
-	cluster_pool_porcent = []
-	count_index = 0
+def rating_range(data):
+	max_rating = max(data["Rating"])
+	min_rating = min(data["Rating"])
+	pace = (max_rating - min_rating)/3
+	rating_range = [min_rating, min_rating + pace, min_rating + 2*pace, max_rating]
+
+	return rating_range
+
+def clusterize_share(bag_of_words, data):
+	df_pool = []
+	clusters = []
+	rating = []
+	weight = []
+
+	index = data.index.values
 	df_bw = pd.DataFrame(bag_of_words)
 	kmeans, optimal_k = clusterize(bag_of_words)
 	predict = kmeans.fit_predict(df_bw.values)
-	df_bw["clusters"] = predict
-	for cluster_sample in range(optimal_k):
-		cluster_pool.append(0)
-	for cluster in range(len(cluster_pool)):
-		cluster_index.append(list())
-		for sample in predict:
-			if sample == cluster:
-				cluster_pool[cluster] = cluster_pool[cluster] + 1
-				cluster_index[cluster].append(index[count_index])
-			count_index = count_index + 1
-		count_index = 0
-	print('\nTotal Sample: ', len(predict))
-	print('Cluster_pool',cluster_pool)
-	
-	for id in range(len(cluster_pool)):
-		cluster_pool_porcent.append(cluster_pool[id]/len(predict))
-		print('Cluster',id,':', '%.2f' % cluster_pool_porcent[id], '%')
+	data["Cluster"] = predict
+	rating_limits = rating_range(data)
 
-	return(cluster_pool, cluster_index)
+	for cluster in range(optimal_k):
+		clusters.append(cluster)
+		data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[0]) & (data['Rating'] < rating_limits[1])]
+		rating.append(1)
+		weight.append(len(data_segment.index))
+		df_pool.append(data_segment)
+
+		clusters.append(cluster)
+		data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[1]) & (data['Rating'] < rating_limits[2])]
+		rating.append(2)
+		weight.append(len(data_segment.index))
+		df_pool.append(data_segment)
+
+		clusters.append(cluster)
+		data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[2])]
+		rating.append(3)
+		weight.append(len(data_segment.index))
+		df_pool.append(data_segment)
+
+	return(df_pool, data, clusters, rating, weight)

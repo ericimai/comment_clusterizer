@@ -1,7 +1,7 @@
 
 # Project library
-import project.import_data as import_data
-# import import_data
+# import project.import_data as import_data
+import import_data
 
 # External library
 import pandas as pd
@@ -61,7 +61,7 @@ def get_comment_vector (dados):
     for comment in dados['Comment_vector']:
         to_cluster_vector.append(comment)
 
-    comment_matrix = np.stack(to_cluster_vector, axis=0)
+    comment_matrix = np.stack(to_cluster_vector, axis=0)	
     return comment_matrix,dados
 
 
@@ -167,4 +167,4 @@ def similarity_matrix(dados):
             cos = np.vdot(comment_matrix[i_comment_matrix], comment_matrix[i_comment_matrix_2])/((np.linalg.norm(comment_matrix[i_comment_matrix]))*np.linalg.norm(comment_matrix[i_comment_matrix_2]))
             similarity_matrix[i_comment_matrix].append(cos)
     comment_matrix = np.stack(similarity_matrix, axis=0)
-    return comment_matrix, dados
+    return comment_matrix
