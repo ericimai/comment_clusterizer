@@ -49,6 +49,21 @@ def get_word_vector (dados):
     word_matrix = np.stack(to_cluster_vector, axis=0)
     return word_matrix
 
+# def get_comment_vector (dados):
+#     # caso 1 - vetor 96
+
+#     # uso de spacy
+#     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
+#     # dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+#     dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
+#     to_cluster_vector = []
+#     # soma todos os vetores palavras do commentario
+#     for comment in dados['Comment_vector']:
+#         to_cluster_vector.append(comment)
+
+#     comment_matrix = np.stack(to_cluster_vector, axis=0)	
+    return comment_matrix,dados
+
 def get_comment_vector (dados):
     # caso 1 - vetor 96
 
@@ -57,11 +72,13 @@ def get_comment_vector (dados):
     # dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
     dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
     to_cluster_vector = []
+
     # soma todos os vetores palavras do commentario
     for comment in dados['Comment_vector']:
-        to_cluster_vector.append(comment)
-
-    comment_matrix = np.stack(to_cluster_vector, axis=0)	
+        sh = comment.shape[0]
+        if sh == 96:
+            to_cluster_vector.append(comment)
+    comment_matrix = np.stack(to_cluster_vector, axis=0)
     return comment_matrix,dados
 
 

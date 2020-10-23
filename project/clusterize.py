@@ -24,7 +24,6 @@ def elbow_method(bag_of_words):
 def clusterize(bag_of_words):
 	optimal_k = elbow_method(bag_of_words)
 	kmeans = KMeans(n_clusters=optimal_k)
-	# print('Parameters: \n')
 	return kmeans, optimal_k
 
 def clusterize_structure(bag_of_words):
@@ -44,6 +43,8 @@ def rating_range(data):
 	return rating_range
 
 def clusterize_share(bag_of_words, data):
+	# bag_of_words: saída do similarity_matrix
+	# data: saída do import_data()
 	df_pool = []
 	clusters = []
 	rating = []

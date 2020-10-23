@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 from string import punctuation
 
 def import_data_bar():
-	reviews = pd.read_excel('data1.xlsm',sheet_name='Result') #, index_col=0
+	reviews = pd.read_excel('base_nova.xlsx',sheet_name='Result') #, index_col=0
 	# columns Index(['Review ID', 'Location Name', 'Group Name', 'Rating', 'Content', 'Data','Source'])
 	dados = reviews[reviews['Content'].notna()]
 	return dados
