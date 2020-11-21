@@ -6,11 +6,17 @@ import import_data
 
 # External library
 from sklearn.cluster import KMeans
+# from sklearn.cluster import AgglomerativeClustering
 # from sklearn.datasets.samples_generator import make_blobs
-import matplotlib.pyplot as plt
 from yellowbrick.cluster import KElbowVisualizer
+# from pyspark.ml.clustering import BisectingKMeans
+# from pyspark.ml.evaluation import ClusteringEvaluator
+from sklearn.cluster import DBSCAN
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+# import hdbscan
+
 
 # Elbow method:
 def elbow_method(bag_of_words):
@@ -42,7 +48,7 @@ def rating_range(data):
 
 	return rating_range
 
-def clusterize_share(bag_of_words, data):
+def clusterize_share(bag_of_words, data, window):
 	# bag_of_words: saída do similarity_matrix
 	# data: saída do import_data()
 	df_pool = []
@@ -55,25 +61,103 @@ def clusterize_share(bag_of_words, data):
 	kmeans, optimal_k = clusterize(bag_of_words)
 	predict = kmeans.fit_predict(df_bw.values)
 	data["Cluster"] = predict
-	rating_limits = rating_range(data)
 
-	for cluster in range(optimal_k):
-		clusters.append(cluster)
-		data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[0]) & (data['Rating'] < rating_limits[1])]
-		rating.append(1)
-		weight.append(len(data_segment.index))
-		df_pool.append(data_segment)
+	if(window == True):
+		rating_limits = rating_range(data)
+		for cluster in range(optimal_k):
+			clusters.append(cluster)
+			data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[0]) & (data['Rating'] < rating_limits[1])]
+			rating.append(1)
+			weight.append(len(data_segment.index))
+			df_pool.append(data_segment)
 
-		clusters.append(cluster)
-		data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[1]) & (data['Rating'] < rating_limits[2])]
-		rating.append(2)
-		weight.append(len(data_segment.index))
-		df_pool.append(data_segment)
+			clusters.append(cluster)
+			data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[1]) & (data['Rating'] < rating_limits[2])]
+			rating.append(2)
+			weight.append(len(data_segment.index))
+			df_pool.append(data_segment)
 
-		clusters.append(cluster)
-		data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[2])]
-		rating.append(3)
-		weight.append(len(data_segment.index))
-		df_pool.append(data_segment)
+			clusters.append(cluster)
+			data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[2])]
+			rating.append(3)
+			weight.append(len(data_segment.index))
+			df_pool.append(data_segment)
+	else:
+		for cluster in range(optimal_k):
+			data_segment = data[(data['Cluster'] == cluster)]
+			df_pool.append(data_segment)
 
 	return(df_pool, data, clusters, rating, weight)
+
+def dbscan_clustering(bag_of_words, data, window):
+	df_pool = []
+	clusters = []
+	rating = []
+	weight = []
+
+	index = data.index.values			
+	# df_bw = pd.DataFrame(bag_of_words)
+	predict = DBSCAN(eps=3).fit_predict(bag_of_words)
+	print("PREDICT\n")
+	print(predict,'\n')
+	data["Cluster"] = predict
+
+	if(window == True):
+		rating_limits = rating_range(data)
+		for cluster in range(-1,max(predict)):
+			clusters.append(cluster)
+			data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[0]) & (data['Rating'] < rating_limits[1])]
+			rating.append(1)
+			weight.append(len(data_segment.index))
+			df_pool.append(data_segment)
+
+			clusters.append(cluster)
+			data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[1]) & (data['Rating'] < rating_limits[2])]
+			rating.append(2)
+			weight.append(len(data_segment.index))
+			df_pool.append(data_segment)
+
+			clusters.append(cluster)
+			data_segment = data[(data['Cluster'] == cluster) & (data['Rating'] >= rating_limits[2])]
+			rating.append(3)
+			weight.append(len(data_segment.index))
+			df_pool.append(data_segment)
+			
+			print(df_pool,'\n')
+			print("Entrou\n")
+	else:
+		for cluster in range(-1,max(predict)):
+			data_segment = data[(data['Cluster'] == cluster)]
+			df_pool.append(data_segment)	
+
+	return(df_pool, data, clusters, rating, weight)
+
+def hier_clustering(dataset):	
+	clustering = AgglomerativeClustering().fit(dataset)
+	dataset["Cluster"] = clustering.labels_
+	return dataset
+
+def bisecting():
+	# dataset = spark.read.format("libsvm").load("data/mllib/sample_kmeans_data.txt")
+	# optimal_k = elbow_method(dataset)
+	dataset = [[1,2,3,4,5,6,7,8,10],[1,2,3,4,5,6,7,8,10],[1,2,3,4,5,6,7,8,10],[1,2,3,4,5,6,7,8,10]]
+	bkm = BisectingKMeans().setK(2).setSeed(1)
+	model = bkm.fit(dataset)
+	print(dataset)
+	# Make predictions
+	predictions = model.transform(dataset)
+	print('predictions', predictions, '\n')
+
+	# Evaluate clustering by computing Silhouette score
+	evaluator = ClusteringEvaluator()
+
+	silhouette = evaluator.evaluate(predictions)
+	print("Silhouette with squared euclidean distance = " + str(silhouette))
+
+	# Shows the result.
+	print("Cluster Centers: ")
+	centers = model.clusterCenters()
+	for center in centers:
+		print(center)
+	return 0
+

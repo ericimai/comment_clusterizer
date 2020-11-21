@@ -177,8 +177,8 @@ def lda_from_clusterized_excel(n_topic,excel_input, excel_output):
     n_sheets = len(aux_df.sheet_names)
 
     writer = pd.ExcelWriter(excel_output, engine='xlsxwriter')
-    for i in range(0, n_sheets):
-        sheet_name_cluster = 'Cluster_' + str(i)
+    for sheet_name_cluster in aux_df.sheet_names:
+        # sheet_name_cluster = 'Cluster_' + str(i)
         data = pd.read_excel(excel_input, sheet_name=sheet_name_cluster, index_col=0)
         # preprocessed_data = lemmatization(data)
         lda_topic, w_freq = lda(n_topic, data)
@@ -199,4 +199,33 @@ def lda_from_clusterized_excel(n_topic,excel_input, excel_output):
         df_word_freq.to_excel(writer, sheet_name='word_freq_' + sheet_name_cluster)
     writer.save()
 
+# def lda_from_clusterized_excel_v2(n_topic,excel_input, excel_output):
+#     '''input: n_topic numero de topicos
+#         excel_input: excel com os clusters do clusterize
+#         excel_output: excel com os dados do LDA
+#     '''
+#     aux_df = pd.ExcelFile(excel_input)
+#     n_sheets = len(aux_df.sheet_names)
 
+#     writer = pd.ExcelWriter(excel_output, engine='xlsxwriter')
+#     for i in range(0, n_sheets):
+#         sheet_name_cluster = 'Cluster_' + str(i)
+#         data = pd.read_excel(excel_input, sheet_name=sheet_name_cluster, index_col=0)
+#         # preprocessed_data = lemmatization(data)
+#         lda_topic, w_freq = lda(n_topic, data)
+#         score_sum = 0
+#         df_topic = pd.DataFrame(columns=['word', 'score'])
+#         for word_topic in lda_topic[0][1].split(' + '):
+#             aux = word_topic.split('*')
+#             score = float(aux[0])
+#             word = aux[1].replace('"', '')
+#             score_sum = score_sum + score
+#             row = {'word': word, 'score': score}
+#             df_topic = df_topic.append(row, ignore_index=True)
+#         df_topic['weighted_score'] = df_topic['score'] / score_sum
+#         df_topic['weighted_score'] = df_topic['weighted_score'].map("{:.3%}".format)
+#         df_word_freq = pd.DataFrame(w_freq, columns=['word', 'freq']).sort_values(by=['freq'],ascending=False)
+#         df_topic = pd.merge(df_topic, df_word_freq, how='inner', left_on='word', right_on='word')
+#         df_topic.to_excel(writer, sheet_name=sheet_name_cluster)
+#         df_word_freq.to_excel(writer, sheet_name='word_freq_' + sheet_name_cluster)
+#     writer.save()
