@@ -26,6 +26,7 @@ def clean_to_vectors(doc):
             token.text != "" and token.text != " " and token.text != "O" and token.text != "A" and token.text != "a" and token.text != "o" and token.is_punct == False and token.is_stop == False and token.is_bracket == False]
 
     text = [token.vector for token in text_1]
+    return text
 
 def comment_to_vector(doc):
     return doc.vector
@@ -51,28 +52,43 @@ def get_word_vector (dados):
     word_matrix = np.stack(to_cluster_vector, axis=0)
     return word_matrix		
 
+# def get_comment_vector (dados):
+#     # caso 1 - vetor 96
+
+#     # uso de spacy
+
+#     dados ['Content'].replace('', np.nan, inplace=True)
+#     dados = dados[dados['Content'].notna()]
+#     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
+#     dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+#     # dados = dados[dados['Docs_clean'].notna()]
+#     print("Dados: \n")
+#     print(dados, '\n')
+#     dados = dados[dados['Docs_clean'].map(lambda d: len(d)) > 0]
+#     dados['Comment_vector'] = dados['Docs_clean'].apply(lambda x: clean_to_vectors(x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
+#     dados = dados[dados['Comment_vector'].notna()]
+#     # print("Dados: \n")
+#     # print(dados, '\n')
+#     dados = dados[dados['Comment_vector'].map(lambda d: len(d)) > 0]
+#     # dados = dados[dados['Comment_vector'].notna()]
+#     print("Dados: \n")
+#     print(dados, '\n')
+    
+#     return dados
+
 def get_comment_vector (dados):
     # caso 1 - vetor 96
 
     # uso de spacy
-
-    dados ['Content'].replace('', np.nan, inplace=True)
-    dados = dados[dados['Content'].notna()]
     dados['Docs'] = dados['Content'].apply(lambda x: nlp(x))  # comentarios tokenizados pelo spacy
-    dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
-    # dados = dados[dados['Docs_clean'].notna()]
-    print("Dados: \n")
-    print(dados, '\n')
-    dados = dados[dados['Docs_clean'].map(lambda d: len(d)) > 0]
-    dados['Comment_vector'] = dados['Docs_clean'].apply(lambda x: clean_to_vectors(x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
-    dados = dados[dados['Comment_vector'].notna()]
-    # print("Dados: \n")
-    # print(dados, '\n')
-    dados = dados[dados['Comment_vector'].map(lambda d: len(d)) > 0]
-    # dados = dados[dados['Comment_vector'].notna()]
-    print("Dados: \n")
-    print(dados, '\n')
-    
+    # dados['Docs_clean'] = dados['Docs'].apply(lambda x: clean_doc(x))  # cada linha sao palavras lematizadas, sem pontuacao e stopwords
+    dados['Comment_vector'] = dados['Docs'].apply(lambda x: comment_to_vector(x))  # cada linha sao vetores das palavras lematizadas, sem pontuacao e stopwords, de cada comentario
+    # to_cluster_vector = []
+    # # soma todos os vetores palavras do commentario
+    # for comment in dados['Comment_vector']:
+    #     to_cluster_vector.append(comment)
+
+    # comment_matrix = np.stack(to_cluster_vector, axis=0)
     return dados
 
 def get_comment_vector_div_norm(dados):

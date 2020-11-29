@@ -97,6 +97,7 @@ def dbscan_clustering(bag_of_words, data, window):
 
 	index = data.index.values			
 	# df_bw = pd.DataFrame(bag_of_words)
+	# predict = DBSCAN(eps=3,min_samples=3).fit_predict(bag_of_words)
 	predict = DBSCAN(eps=3).fit_predict(bag_of_words)
 	print("PREDICT\n")
 	print(predict,'\n')

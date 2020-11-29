@@ -174,7 +174,7 @@ def lda_from_clusterized_excel(n_topic,excel_input, excel_output):
         excel_output: excel com os dados do LDA
     '''
     aux_df = pd.ExcelFile(excel_input)
-    n_sheets = len(aux_df.sheet_names)
+    # n_sheets = len(aux_df.sheet_names)
 
     writer = pd.ExcelWriter(excel_output, engine='xlsxwriter')
     for sheet_name_cluster in aux_df.sheet_names:

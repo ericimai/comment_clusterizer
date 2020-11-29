@@ -28,8 +28,8 @@ sim_matrix = word_ebbending.similarity_matrix(data_v2)
 df_pool, data_v3, clusters, rating, weight = clusterize.dbscan_clustering(sim_matrix, data_v2, False)
 
 # mudar aqui os nomes dos inputs e outputs
-excel_input = 'Clusters_Similarity_bar_DBSCAN_sem_janelamento_EPS3_Limpeza'+'.xlsx'
-excel_output = 'LDA_Cluster_Similarity_bar_DBSCAN_sem_janelamento_EPS3_Limpeza'+'.xlsx'
+excel_input = 'Clusters_Similarity_bar_DBSCAN_sem_janelamento_EPS3_Limpeza_MIN_SAMPLE_4'+'.xlsx'
+excel_output = 'LDA_Cluster_Similarity_bar_DBSCAN_sem_janelamento_EPS3_Limpeza_MIN_SAMPLE_4'+'.xlsx'
 n_topic = 1
 writer =pd.ExcelWriter(excel_input, engine = 'xlsxwriter')
 count = 0
