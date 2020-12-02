@@ -1,14 +1,14 @@
 # Project library import
-# import project.import_data as import_data
-# import project.clusterize as clusterize
-# import project.word_ebbending as word_ebbending
-# import project.output_analysis as output_analysis
-# import project.LDA as LDA
-import import_data
-import clusterize
-import word_ebbending
-import output_analysis
-import LDA
+import project.import_data as import_data
+import project.clusterize as clusterize
+import project.word_ebbending as word_ebbending
+import project.output_analysis as output_analysis
+import project.LDA as LDA
+# import import_data
+# import clusterize
+# import word_ebbending
+# import output_analysis
+# import LDA
 
 # External library import
 import pandas as pd

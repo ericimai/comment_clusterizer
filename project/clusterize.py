@@ -1,16 +1,16 @@
 # Project library
-# import project.word_ebbending as word_ebbending
-# import project.import_data as import_data
-import word_ebbending
-import import_data
+import project.word_ebbending as word_ebbending
+import project.import_data as import_data
+# import word_ebbending
+# import import_data
 
 # External library
 from sklearn.cluster import KMeans
-# from sklearn.cluster import AgglomerativeClustering
-# from sklearn.datasets.samples_generator import make_blobs
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.datasets.samples_generator import make_blobs
 from yellowbrick.cluster import KElbowVisualizer
-# from pyspark.ml.clustering import BisectingKMeans
-# from pyspark.ml.evaluation import ClusteringEvaluator
+from pyspark.ml.clustering import BisectingKMeans
+from pyspark.ml.evaluation import ClusteringEvaluator
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -101,6 +101,8 @@ def dbscan_clustering(bag_of_words, data, window):
 	predict = DBSCAN(eps=3).fit_predict(bag_of_words)
 	print("PREDICT\n")
 	print(predict,'\n')
+	print(len(predict))
+	print(data.shape)
 	data["Cluster"] = predict
 
 	if(window == True):

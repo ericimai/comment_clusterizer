@@ -1,7 +1,7 @@
-# import project.import_data as import_data
-# import project.clusterize as cluster
-import import_data
-import clusterize
+import project.import_data as import_data
+import project.clusterize as cluster
+# import import_data
+# import clusterize
 
 import re
 import numpy as np
